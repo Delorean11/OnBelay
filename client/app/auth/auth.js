@@ -2,8 +2,9 @@ angular.module('nova.auth', [])
 
 .controller('AuthController', function ($scope, $rootScope, $window, $state, Auth, Notify) {
   $scope.user = {};
-<<<<<<< HEAD
-  $rootScope.unreadMessages = $rootScope.unreadMessages || 0;
+  if (Auth.isAuth()) {
+    $rootScope.hasAuth = true;
+  }
 
   $scope.checkGeoLocation = function(cb) {
     if (navigator.geolocation) {
@@ -33,12 +34,6 @@ angular.module('nova.auth', [])
 
   }
 
-
-=======
->>>>>>> Chat, notifications and contact history sidebar fully functional. Closed #24 closed #6
-  if (Auth.isAuth()) {
-    $rootScope.hasAuth = true;
-  }
 
   $scope.goToProfile = function(climber){
     ClimberProfile.climber.info = climber;

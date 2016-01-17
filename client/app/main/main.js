@@ -1,4 +1,5 @@
 angular.module('nova.main', [])
+
 .controller('MainController', function($scope, $rootScope, $window, $state, $firebaseObject, Climbers, Notify, Auth){
 
   $scope.activeClimbers = [];
@@ -37,7 +38,6 @@ angular.module('nova.main', [])
     ClimberProfile.climber.info = climber;
     $state.go('profile', {'userName':climber.first+climber.last});
   };
-
 
   $scope.getActiveClimbers = function(){
     Climbers.getClimbers()
