@@ -5,3 +5,12 @@ ul{
 .centerText{
   text-align: center;
 }
+
+.editIcon{
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.leftAlign{
+  text-align: left;
+}

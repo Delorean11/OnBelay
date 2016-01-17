@@ -18,6 +18,7 @@ var findActiveClimbers = function(req, res) {
         gender: climber.gender,
         skillLevel: climber.skillLevel,
         id: climber._id,
+        favs: climber.favs || '',
         profileImg: climber.profileImg || 'assets/img/profile-generic.jpg'
       };
     });
@@ -36,6 +37,7 @@ var getClimberInfo = function(req, res){
       gender: climber.gender,
       skillLevel: climber.skillLevel,
       id: climber._id,
+      favs: climber.favs || '',
       profileImg: climber.profileImg || 'assets/img/profile-generic.jpg'
     };
     res.json(info);

@@ -4,13 +4,72 @@
       <img class='img-responsive' ng-src='{{user.profileImg}}' class='col-xs-4'>
     </div>
     <div class='userProfileInfo col-xs-5'>
-      <ul>
-        <li><h2 class='userProfileName'>{{ user.name.first + ' ' + user.name.last }}</h2></li>
-        <li><p class='userProfileSkill'>{{ user.skillLevel }}</p></li>
-        <li><p class='userProfileZip'>{{ user.zipCode }}</p><li>
-        <li><p class='userProfileFavs'>Loves to climb: {{ user.favs }}</p></li>
-        <li><p class='userProfileClimb' ng-if='user.climb'>Looking for a climb</p></li>
-      </ul>
+      <table>
+      <thead>
+        <tr>
+          <td ng-if='!edits.name'>
+            <h2 class='userProfileName'>{{ user.name.first + ' ' + user.name.last }}</h2>
+          </td>
+          <td ng-if='edits.name'>
+            <input type='text' ng-model='updatedUser.name.first' />
+          </td>
+          <td ng-if='edits.name'>
+            <input type='text' ng-model='updatedUser.name.last' />
+          </td>
+          <td ng-if='!edits.name && loggedInUser === user.username'>
+            <div class='editIcon' ng-click='flipPropertyState("name")'><span class='glyphicon glyphicon-pencil'></span></div>
+          </td>
+          <td ng-if='edits.name'>
+            <div class='editIcon' ng-click='updateProperty("name")'><span class='glyphicon glyphicon-saved'></span></div>
+            <div class='editIcon' ng-click='cancelUpdate("name")'><span class='glyphicon glyphicon-remove'></span></div>
+          </td>
+        </tr>
+        <tr>
+          <td ng-if='!edits.skillLevel'>
+            <p class='userProfileSkill'>Skill: {{ user.skillLevel }}</p>
+          </td>
+          <td ng-if='edits.skillLevel'>
+            <input type='text' ng-model='updatedUser.skillLevel' />
+          </td>
+          <td ng-if='!edits.skillLevel && loggedInUser === user.username'>
+            <div class='editIcon' ng-click='flipPropertyState("skillLevel")'><span class='glyphicon glyphicon-pencil'></span></div>
+          </td>
+          <td ng-if='edits.skillLevel'>
+            <div class='editIcon' ng-click='updateProperty("skillLevel")'><span class='glyphicon glyphicon-saved'></span></div>
+            <div class='editIcon' ng-click='cancelUpdate("skillLevel")'><span class='glyphicon glyphicon-remove'></span></div>
+          </td>
+        </tr>
+        <tr>
+          <td ng-if='!edits.zipCode'>
+            <p class='userProfileZip'>Zip: {{ user.zipCode }}</p>
+          </td>
+          <td ng-if='edits.zipCode'>
+            <input type='text' ng-model='updatedUser.zipCode' />
+          </td>
+          <td ng-if='!edits.zipCode && loggedInUser === user.username'>
+            <div class='editIcon' ng-click='flipPropertyState("zipCode")'><span class='glyphicon glyphicon-pencil'></span></div>
+          </td>
+          <td ng-if='edits.zipCode'>
+            <div class='editIcon' ng-click='updateProperty("zipCode")'><span class='glyphicon glyphicon-saved'></span></div>
+            <div class='editIcon' ng-click='cancelUpdate("zipCode")'><span class='glyphicon glyphicon-remove'></span></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p class='userProfileFavs'>Loves to climb: {{ user.favs }}</p>
+          </td>
+          <td ng-if='edits.favs'>
+            <input type='text' ng-model='updatedUser.favs' ng-pattern='/[A-Za-z, ]*/'>
+          </td>
+          <td ng-if='edits.favs'>
+            <div class='editIcon' ng-click='updateProperty("favs")'><span class='glyphicon glyphicon-saved'></span></div>
+            <div class='editIcon' ng-click='cancelUpdate("favs")'><span class='glyphicon glyphicon-remove'></span></div>
+          </td>
+          <td ng-if='!edits.favs  && loggedInUser === user.username'>
+            <div class='editIcon' ng-click='flipPropertyState("favs")'><span class='glyphicon glyphicon-plus'></span></div>
+          </td>
+        </tr>
+      </table>
     </div>
     <div class='userProfileMap col-xs-4'>
       <h1> Map Placeholder</h1>
@@ -20,9 +79,6 @@
     <div class='updatePic centerText col-xs-3'>
     <a ng-click='updatePic()' ng-if="!updatingPic">Update your photo</a>
       <input ng-if="updatingPic" type='file' ng-model-instant onchange="angular.element(this).scope().imageUpload(event)" />
-    </div>
-    <div class='updateLink centerText col-xs-3'>
-      <a ui-sref='update' >Update your profile</a>
     </div>
   </div>
 
