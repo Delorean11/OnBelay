@@ -10,11 +10,11 @@ angular.module('nova.auth', [])
       $scope.getUserLocation(cb);
     }
     else {
-      console.log('Geolocation is not supported for this Browser/OS version yet.');      
+      console.log('Geolocation is not supported for this Browser/OS version yet.');
     }
   }
 
-  $scope.getUserLocation = function(cb) {  
+  $scope.getUserLocation = function(cb) {
       var startPos;
       var geoSuccess = function(position) {
         startPos = position;
@@ -40,7 +40,7 @@ angular.module('nova.auth', [])
   $scope.goToProfile = function(climber){
     ClimberProfile.climber.info = climber;
     $state.go('profile', {'userName':climber.first+climber.last});
-  }
+  };
 
   $scope.signin = function () {
     $scope.checkGeoLocation(function(lat,lng){
@@ -49,28 +49,17 @@ angular.module('nova.auth', [])
     })
     Auth.signin($scope.user)
       .then(function (token) {
-        var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/' + $rootScope.loggedInUser);
         $window.localStorage.setItem('com.nova', token);
         $rootScope.hasAuth = true;
-        //put an event listener on the user's urls
-        inbox.on('child_changed', function(childSnapShot) {
-          var conversation = new Firebase('https://on-belay-1.firebaseio.com/conversations/' + childSnapShot.key());
-          var allMessages = {};
-          conversation.on('value', function(snapshot) {
-            allMessages[snapshot.key()] = snapshot.val();
-          });
-          for(var key in allMessages) {
-            for(var k in allMessages[key]) {
-              // console.log(allMessages[key][k]);
-              console.log(allMessages[key][k][user][recipient] === $rootScope.loggedInUser && !allMessages[key][k][wasRead])
-              if (allMessages[key][k][user][recipient] === $rootScope.loggedInUser && !allMessages[key][k][wasRead]) {
-                //increment the notification count and get out of this loop
-                $rootScope.unreadMessages++;
-                break;
-              }
-            }
-          }
+
+        var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/' + $rootScope.loggedInUser);
+        var unread = $firebaseObject(inbox);
+
+        inbox.ref().child('unread').on('value', function(data) {
+          $rootScope.unreadMessages = data.val();
+          console.log('root', $rootScope.unreadMessages, 'data', data.val());
         });
+
         $state.go('main');
         // $scope.checkNotifications();
       })

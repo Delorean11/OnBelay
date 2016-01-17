@@ -1,19 +1,12 @@
 angular.module('nova.main', [])
-
-
-.controller('MainController', function($scope, $rootScope, Climbers, Notify, Auth, $state, $firebaseObject){
-
-
-  // var param = '-K82b6x8j9uXqIclfUel';
-  // var FIREBASE = new Firebase('https://on-belay.firebaseio.com/' + param);
-  // var conversations = $firebaseObject(FIREBASE);
-  // conversations.$bindTo($scope, 'data');
+.controller('MainController', function($scope, $rootScope, $window, $state, $firebaseObject, Climbers, Notify, Auth){
 
   $scope.activeClimbers = [];
   $scope.status = false;
   $scope.message = {};
   $scope.showChat = false;
   var params = '';
+  var called = $window.localStorage.getItem('called');
 
   $scope.displayChat = function(user) {
     params = [$rootScope.loggedInUser, user];
@@ -23,7 +16,11 @@ angular.module('nova.main', [])
     params = params.join('-');
 
     var FIREBASE = new Firebase('https://on-belay-1.firebaseio.com/conversations/' + params);
-    var conversations = $firebaseObject(FIREBASE);
+    $firebaseObject(FIREBASE);
+
+    if(called === 'true' || called === null) {
+      $window.localStorage.setItem('called', false);
+    }
 
     $scope.showChat = true;
     $scope.recipient = user;
@@ -39,7 +36,7 @@ angular.module('nova.main', [])
   $scope.goToProfile = function(climber){
     ClimberProfile.climber.info = climber;
     $state.go('profile', {'userName':climber.first+climber.last});
-  }
+  };
 
 
   $scope.getActiveClimbers = function(){
@@ -75,13 +72,7 @@ angular.module('nova.main', [])
       });
   };
 
-  var called = false;
-
-  //Testing, delete later
   $scope.sendMessage = function() {
-    //var conversations = new Firebase('https://on-belay-1.firebaseio.com/' + params);
-
-    // var inbox = new Firebase('https://on-belay-next.firebaseio.com/inbox')
     var MAIN = new Firebase('https://on-belay-1.firebaseio.com');
     var conversations = MAIN.child('conversations/' + params);
     var inbox = MAIN.child('inbox');
@@ -102,8 +93,9 @@ angular.module('nova.main', [])
       hasMessages: true
     });
 
-    if(!called) {
-      called = true;
+    var calledCheck = $window.localStorage.getItem('called');
+    if(calledCheck === 'false') {
+      $window.localStorage.setItem('called', true);
       recipientInbox.child('unread').transaction(function(currentVal) {
         return(currentVal || 0) + 1;
       });
