@@ -21,9 +21,7 @@ var userSchema = mongoose.Schema({
   // },
   conversations: Array,
   createdAt: Date,
-  updatedAt: Date,
-  profileImg: String,
-  favs: String
+  updatedAt: Date
 });
 
 userSchema.pre('save', function(next) {

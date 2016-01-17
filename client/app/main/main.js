@@ -8,7 +8,7 @@ angular.module('nova.main', [])
   var params = '';
   var called = $window.localStorage.getItem('called');
 
-  $scope.displayChat = function(user) {
+  $rootScope.displayChat = function(user) {
     params = [$rootScope.loggedInUser, user];
     params = params.sort(function(a, b) {
       return a > b;
@@ -43,7 +43,6 @@ angular.module('nova.main', [])
     Climbers.getClimbers()
       .then(function(res) {
         $scope.activeClimbers = res;
-        console.log($scope.activeClimbers);
       })
       .catch(function(err) {
         console.error(err);
@@ -72,10 +71,22 @@ angular.module('nova.main', [])
       });
   };
 
+  $rootScope.markAsRead = function(contact) {
+    var sender = new Firebase('https://on-belay-1.firebaseio.com/inbox/' + $rootScope.loggedInUser + '/' + contact);
+    var recipient = new Firebase('https://on-belay-1.firebaseio.com/inbox/' + $rootScope.loggedInUser);
+    //decrement unread counter in Firebase
+    recipient.child('unread').transaction(function(currVal) {
+      if (currVal > 0) {
+        currVal--;
+        return currVal;
+      }
+    });
+    sender.ref().child('newMessage').set(false);
+  };
+
   $scope.sendMessage = function() {
-    var MAIN = new Firebase('https://on-belay-1.firebaseio.com');
-    var conversations = MAIN.child('conversations/' + params);
-    var inbox = MAIN.child('inbox');
+    var conversations = new Firebase('https://on-belay-1.firebaseio.com/conversations/' + params);
+    var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
     var senderInbox = inbox.child($rootScope.loggedInUser);
     var recipientInbox = inbox.child($scope.recipient);
 
@@ -85,24 +96,19 @@ angular.module('nova.main', [])
       text: $scope.message.text
     });
 
-    senderInbox.child(params).push({
-      hasMessages: true
-    });
-
-    recipientInbox.child(params).push({
-      hasMessages: true
-    });
-
     var calledCheck = $window.localStorage.getItem('called');
     if(calledCheck === 'false') {
       $window.localStorage.setItem('called', true);
+      recipientInbox.child($rootScope.loggedInUser).set({
+        sender: $rootScope.loggedInUser,
+        newMessage: true
+      });
+
       recipientInbox.child('unread').transaction(function(currentVal) {
         return(currentVal || 0) + 1;
       });
     }
 
     $scope.message.text = '';
-
   };
-
 });

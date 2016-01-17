@@ -36,7 +36,7 @@ angular.module('nova.services', [])
     $rootScope.loggedInUser = '';
     $window.localStorage.removeItem('com.nova');
     $window.localStorage.removeItem('loggedInUser');
-
+    $window.localStorage.removeItem('called');
     $state.go('signin');
   };
 

@@ -1,7 +1,8 @@
 angular.module('nova.auth', [])
 
-.controller('AuthController', function ($scope, $rootScope, $window, $state, Auth, Notify, $firebaseObject) {
+.controller('AuthController', function ($scope, $rootScope, $window, $state, Auth, Notify) {
   $scope.user = {};
+<<<<<<< HEAD
   $rootScope.unreadMessages = $rootScope.unreadMessages || 0;
 
   $scope.checkGeoLocation = function(cb) {
@@ -33,6 +34,8 @@ angular.module('nova.auth', [])
   }
 
 
+=======
+>>>>>>> Chat, notifications and contact history sidebar fully functional. Closed #24 closed #6
   if (Auth.isAuth()) {
     $rootScope.hasAuth = true;
   }
@@ -51,15 +54,6 @@ angular.module('nova.auth', [])
       .then(function (token) {
         $window.localStorage.setItem('com.nova', token);
         $rootScope.hasAuth = true;
-
-        var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/' + $rootScope.loggedInUser);
-        var unread = $firebaseObject(inbox);
-
-        inbox.ref().child('unread').on('value', function(data) {
-          $rootScope.unreadMessages = data.val();
-          console.log('root', $rootScope.unreadMessages, 'data', data.val());
-        });
-
         $state.go('main');
         // $scope.checkNotifications();
       })
@@ -80,6 +74,7 @@ angular.module('nova.auth', [])
         console.error(error);
       });
   };
+
 
   $scope.checkNotifications = function() {
     if ($rootScope.hasAuth && $state.name !== 'notifications') {
