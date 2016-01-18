@@ -3,6 +3,7 @@ angular.module('nova.profile', [])
 .controller('ProfileController', function($rootScope, $scope, Climber, Update, $stateParams){
   $scope.updatedUser = {};
   $scope.updatingPic = false;
+  $scope.profileImgOversize = false;
   $scope.edits = {
     name: false,
     skillLevel: false,
@@ -27,9 +28,17 @@ angular.module('nova.profile', [])
     var file = files[0];
     var reader = new FileReader();
 
-
     reader.onload = $scope.imageIsLoaded;
-    reader.readAsDataURL(file);
+    if(file.size <= 2097152){
+      console.log('file size fine');
+      reader.readAsDataURL(file);
+    }else{
+      console.log('file size not fine');
+      alert('Maximum image size is 2mb');
+      // $scope.profileImgOversize = true;
+      // console.log($scope.profileImgOversize, ' profileImgOversize');
+    }
+
   };
 
   $scope.imageIsLoaded = function(e){

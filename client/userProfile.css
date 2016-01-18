@@ -2,7 +2,7 @@ ul{
   list-style: none;
 }
 
-.centerText{
+.centerAlign{
   text-align: center;
 }
 
@@ -14,3 +14,12 @@ ul{
 .leftAlign{
   text-align: left;
 }
+
+.userProfileDisplay{
+  border-bottom: 1px solid black;
+  padding-bottom: 30px;
+}
+
+/*.updatePic input{
+  background-color: #3498db;
+}*/
