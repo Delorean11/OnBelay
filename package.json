@@ -8,7 +8,6 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server/server.js",
-    "postinstall": "bower install"
 
   },
   "repository": {
@@ -22,7 +21,6 @@
   },
   "homepage": "https://github.com/Delorean11/OnBelay",
   "dependencies": {
-    "bower": "^1.7.2",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.2",
     "express": "^4.13.3",
