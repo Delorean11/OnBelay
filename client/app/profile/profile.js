@@ -27,9 +27,10 @@ angular.module('nova.profile', [])
     var file = files[0];
     var reader = new FileReader();
 
-    reader.onload = $scope.imageIsLoaded; 
+
+    reader.onload = $scope.imageIsLoaded;
     reader.readAsDataURL(file);
-  }
+  };
 
   $scope.imageIsLoaded = function(e){
     $scope.$apply(function() {
@@ -38,12 +39,14 @@ angular.module('nova.profile', [])
       Update.updateProfileImg(e.target.result)
         .then(function(res){
           console.log(res);
-        });  
+        });
+
+
     });
   }
 
   $scope.updatePic = function(){
-    $scope.updatingPic = true;  
+    $scope.updatingPic = true;
   }
 
   $scope.flipPropertyState = function(property){

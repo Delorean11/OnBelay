@@ -36,7 +36,7 @@ angular.module('nova.services', [])
     $rootScope.loggedInUser = '';
     $window.localStorage.removeItem('com.nova');
     $window.localStorage.removeItem('loggedInUser');
-
+    $window.localStorage.removeItem('called');
     $state.go('signin');
   };
 
@@ -145,13 +145,13 @@ angular.module('nova.services', [])
       getRequest: getRequest,
       postRequest: postRequest
     };
-  
+
 }])
 
 .factory('Location', ['$http', '$rootScope', function($http, $rootScope){
 
   //Most of the work starts on line 72 when we start a chain of callbacks calling getUserLocation
-  // Because getUserLocation checks if 
+  // Because getUserLocation checks if
 
   var checkGeoLocation = function() {
     if (navigator.geolocation) {
@@ -163,7 +163,7 @@ angular.module('nova.services', [])
   }
 
   var sendTestRequest = function(userZipcode,cb){
-    
+
     $http({
       method: 'POST',
       url: '/api/location', //Server should have /api/location path defined
@@ -178,16 +178,16 @@ angular.module('nova.services', [])
   listOfDistancesToUserSorted = {};
   // listOfDistances is a list of lat and lng objects with user properties attached
   var listOfDistances = [];
-  
+
 
 
 
   // This is the function that gets the user's location to use in the rest of the functions.
   // The call back is important to make sure the order is correct.
-  var getUserLocation = function(cb) {  
+  var getUserLocation = function(cb) {
       var startPos;
       var geoSuccess = function(position) {
-        startPos = position;       
+        startPos = position;
         cb(startPos.coords.latitude,startPos.coords.longitude);
       };
       var geoError = function(error) {
@@ -201,17 +201,17 @@ angular.module('nova.services', [])
       navigator.geolocation.getCurrentPosition(geoSuccess,geoError);
 
   }
-  
+
 
 
   var getDistance = function(p1,p2,cb) {
-    
+
   // We will get information from the database with a lat and lng property
 
     googleMapsObj1 =  new google.maps.LatLng(p1.lat, p1.lng);
     googleMapsObj2 = new google.maps.LatLng(p2.lat, p2.lng);
     var distance = google.maps.geometry.spherical.computeDistanceBetween(googleMapsObj1, googleMapsObj2);
-    
+
     //distance in meters
     return distance;
   }
@@ -222,10 +222,10 @@ angular.module('nova.services', [])
       return a.distanceToUser - b.distanceToUser;
     })
   }
-  
-  
+
+
   // Make ZipCode mandatory that way we can store their zip codes and filter by nearest zipCode
-  
+
   getSortedListOfUsersByShortestDistance = function(userZipcode) {
     // We call this function to get the list of users sorted, we may want to pass in a userZipCode that we would get from the controller itself.
       // This is a chain of calls from the previous functions.
@@ -235,27 +235,27 @@ angular.module('nova.services', [])
      currentUserPosition.lng = lng;
 
       var listOfDistancesToUser = [];
-      // Need to get user's zipcode. Probably  within whatever controller we use. 
+      // Need to get user's zipcode. Probably  within whatever controller we use.
       var userZipcode = userZipcode || 63108;
 
         sendTestRequest(userZipcode, function(listOfUsers){
-          //We are getting a list of user's from the server 
+          //We are getting a list of user's from the server
           // We have a route whose only purpose is to get users filtered by location that we pass in.
             // Route exists in sendTestRequest api/location
           listOfUsers.forEach(function(user){
             var constructorObject = {};
-            //getDistance finds  the lat and lng property of hte user object already so we only need to pass the user object that we get from the server.            
+            //getDistance finds  the lat and lng property of hte user object already so we only need to pass the user object that we get from the server.
               // Now we can construct the array of objects that contain user and their distance to the current logged in user.
             constructorObject.distanceToUser = getDistance(currentUserPosition, user);
             constructorObject.user = user;
             listOfDistancesToUser.push(constructorObject);
-          }); 
+          });
 
           // Now we have a list of distances to the user and we can sort by those distances
             var listOfDistancesToUserSorted = sortArrayObjects(listOfDistancesToUser);
             console.log(listOfDistancesToUserSorted, ' post sorting');
             // This array contains users that are sorted.
-            return listOfDistancesToUserSorted; 
+            return listOfDistancesToUserSorted;
         });
       });
   }
@@ -268,9 +268,9 @@ angular.module('nova.services', [])
     sortArrayObjects: sortArrayObjects,
     getSortedListOfUsersByShortestDistance: getSortedListOfUsersByShortestDistance
   };
-  
+
 }])
-  
+
 
 .factory('Notify', function($http, $rootScope) {
 

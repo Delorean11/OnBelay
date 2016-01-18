@@ -72,12 +72,34 @@ angular.module('nova', [
   return attach;
 })
 
-.run(function($rootScope, $state, $window, Auth) {
+.run(function($rootScope, $state, $window, $firebaseObject, Auth) {
   $rootScope.loggedInUser =  $window.localStorage.getItem('loggedInUser');
-  console.log($rootScope);
   $rootScope.$on('$stateChangeStart', function(evt, toState, toParams, fromState, fromParams){
     if (toState.name === 'signin') {
       return;
+    }
+    if (toState.name === 'main') {
+      var INBOX = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
+      var userInbox = INBOX.child($rootScope.loggedInUser);
+      var unread = $firebaseObject(userInbox);
+      var unreadCount = userInbox.child('unread');
+
+      $firebaseObject(unreadCount).$bindTo($rootScope, 'unreadMessages').then(function() {
+        if ($rootScope.unreadMessages['$value'] === null) {
+          $rootScope.unreadMessages = 0;
+        }
+        if ($rootScope.unreadMessages['$value'] === 0) {
+          $rootScope.unreadMessages = 0;
+        }
+      });
+
+      userInbox.on('value', function(data) {
+        $rootScope.contactHistory = [];
+        for(var key in data.val()) {
+          var contact = data.val()[key];
+          $rootScope.contactHistory.push(contact);
+        }
+      });
     }
     if (!Auth.isAuth() && toState.name !== 'signup'){
       evt.preventDefault();

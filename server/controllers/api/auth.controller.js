@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === undefined) {
 
 var createToken = function(user) {
  return jwt.sign({ user: user.username }, tokenSecret, {
-   //expiresIn: 86400
+  expiresIn: '10h'
  });
 };
 
@@ -55,7 +55,7 @@ module.exports = {
             if (err) console.error(err);
 
             var token = createToken(user);
-            res.json({ success: true, token: token, username: user.username });
+            res.json({ success: true, token: token });
           });
         });
       }

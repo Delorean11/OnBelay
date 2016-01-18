@@ -1,21 +1,15 @@
 angular.module('nova.main', [])
 
-
-.controller('MainController', function($scope, $rootScope, Climbers, Notify, Auth, $state, $firebaseObject){
-
-
-  // var param = '-K82b6x8j9uXqIclfUel';
-  // var FIREBASE = new Firebase('https://on-belay.firebaseio.com/' + param);
-  // var conversations = $firebaseObject(FIREBASE);
-  // conversations.$bindTo($scope, 'data');
+.controller('MainController', function($scope, $rootScope, $window, $state, $firebaseObject, Climbers, Notify, Auth){
 
   $scope.activeClimbers = [];
   $scope.status = false;
   $scope.message = {};
   $scope.showChat = false;
   var params = '';
+  var called = $window.localStorage.getItem('called');
 
-  $scope.displayChat = function(user) {
+  $rootScope.displayChat = function(user) {
     params = [$rootScope.loggedInUser, user];
     params = params.sort(function(a, b) {
       return a > b;
@@ -23,7 +17,11 @@ angular.module('nova.main', [])
     params = params.join('-');
 
     var FIREBASE = new Firebase('https://on-belay-1.firebaseio.com/conversations/' + params);
-    var conversations = $firebaseObject(FIREBASE);
+    $firebaseObject(FIREBASE);
+
+    if(called === 'true' || called === null) {
+      $window.localStorage.setItem('called', false);
+    }
 
     $scope.showChat = true;
     $scope.recipient = user;
@@ -39,14 +37,12 @@ angular.module('nova.main', [])
   $scope.goToProfile = function(climber){
     ClimberProfile.climber.info = climber;
     $state.go('profile', {'userName':climber.first+climber.last});
-  }
-
+  };
 
   $scope.getActiveClimbers = function(){
     Climbers.getClimbers()
       .then(function(res) {
         $scope.activeClimbers = res;
-        console.log($scope.activeClimbers);
       })
       .catch(function(err) {
         console.error(err);
@@ -75,16 +71,22 @@ angular.module('nova.main', [])
       });
   };
 
-  var called = false;
+  $rootScope.markAsRead = function(contact) {
+    var sender = new Firebase('https://on-belay-1.firebaseio.com/inbox/' + $rootScope.loggedInUser + '/' + contact);
+    var recipient = new Firebase('https://on-belay-1.firebaseio.com/inbox/' + $rootScope.loggedInUser);
+    //decrement unread counter in Firebase
+    recipient.child('unread').transaction(function(currVal) {
+      if (currVal > 0) {
+        currVal--;
+        return currVal;
+      }
+    });
+    sender.ref().child('newMessage').set(false);
+  };
 
-  //Testing, delete later
   $scope.sendMessage = function() {
-    //var conversations = new Firebase('https://on-belay-1.firebaseio.com/' + params);
-
-    // var inbox = new Firebase('https://on-belay-next.firebaseio.com/inbox')
-    var MAIN = new Firebase('https://on-belay-1.firebaseio.com');
-    var conversations = MAIN.child('conversations/' + params);
-    var inbox = MAIN.child('inbox');
+    var conversations = new Firebase('https://on-belay-1.firebaseio.com/conversations/' + params);
+    var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
     var senderInbox = inbox.child($rootScope.loggedInUser);
     var recipientInbox = inbox.child($scope.recipient);
 
@@ -94,23 +96,19 @@ angular.module('nova.main', [])
       text: $scope.message.text
     });
 
-    senderInbox.child(params).push({
-      hasMessages: true
-    });
+    var calledCheck = $window.localStorage.getItem('called');
+    if(calledCheck === 'false') {
+      $window.localStorage.setItem('called', true);
+      recipientInbox.child($rootScope.loggedInUser).set({
+        sender: $rootScope.loggedInUser,
+        newMessage: true
+      });
 
-    recipientInbox.child(params).push({
-      hasMessages: true
-    });
-
-    if(!called) {
-      called = true;
       recipientInbox.child('unread').transaction(function(currentVal) {
         return(currentVal || 0) + 1;
       });
     }
 
     $scope.message.text = '';
-
   };
-
 });
