@@ -6,6 +6,7 @@ angular.module('nova.main', [])
   $scope.status = false;
   $scope.message = {};
   $scope.showChat = false;
+  $scope.dateNow = Date.now();
   var params = '';
 
   var scrollToBottom = function() {
@@ -14,6 +15,15 @@ angular.module('nova.main', [])
       scroller.scrollTop = scroller.scrollHeight;
     }, 20, false);
   };
+
+  var updateChatOpenClose = function(openOrClose) {
+    var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
+    var senderInbox = inbox.child($rootScope.loggedInUser);
+    //var recipientInbox = inbox.child($scope.recipient);
+    var obj = {};
+    obj[openOrClose] = Date.now();
+    senderInbox.update(obj);
+  }
 
   $rootScope.displayChat = function(user) {
     params = [$rootScope.loggedInUser, user];
@@ -36,6 +46,7 @@ angular.module('nova.main', [])
       }
     });
 
+    updateChatOpenClose('chatOpenedAt');
 
     $scope.showChat = true;
     $scope.recipient = user;
@@ -49,6 +60,11 @@ angular.module('nova.main', [])
 
     scrollToBottom();
   };
+
+  $rootScope.closeChat = function() {
+    $scope.showChat = !$scope.showChat
+    updateChatOpenClose('chatClosedAt');
+  }
 
   $scope.goToProfile = function(climber){
     ClimberProfile.climber.info = climber;

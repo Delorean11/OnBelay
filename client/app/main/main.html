@@ -37,17 +37,19 @@
     </div>
 
     <div class="panel panel-default chat-box" ng-show="showChat">
-      <div class="panel-heading"><b>{{recipient}}</b><span class="pull-right glyphicon glyphicon-remove close-btn" ng-click="showChat = !showChat"></span></div>
+      <div class="panel-heading"><b>{{recipient}}</b><span class="pull-right glyphicon glyphicon-remove close-btn" ng-click="closeChat()"></span></div>
       <div class="panel-body chat-body" id="scrollToBottom" >
         <ul ng-repeat="chat in chatsView">
           <li>
             <p>
               <span ng-if="chat.users.sender === loggedInUser"><b>You: </b></span>
               <span ng-if="chat.users.sender !== loggedInUser"><b>{{chat.users.sender}}:</b></span>
+              <span ng-if="chat.date > chatClosedAt['$value'] && chat.date < chatOpenedAt['$value']" class="">-----New Messages------</span>
               <span class="chat-text">{{chat.text}}</span>
             </p>
             <p class="chat-date">
-              <span><i>{{chat.date | date:'shortTime'}}</i></span>
+            Date:{{dateNow}}
+              <span><i>sent:{{chat.date | date:'shortTime'}}</i></span>
             </p>
           </li>
         </ul>
