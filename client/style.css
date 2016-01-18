@@ -208,6 +208,14 @@ nav a:last-child {
   overflow-y: scroll;
 }
 
+.chat-body ul {
+  padding: 0
+}
+
+.chat-body ul li {
+  margin-bottom: 25px;
+}
+
 .chat-form {
   margin-top: 21px;
 }
@@ -219,3 +227,14 @@ nav a:last-child {
 .close-btn {
   cursor: pointer;
 }
+
+.chat-text {
+  word-wrap: break-word;
+}
+
+.chat-date {
+  float:right;
+  font-size: x-small;
+  margin-top: -13px;
+}
+
