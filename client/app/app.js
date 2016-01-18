@@ -41,6 +41,7 @@ angular.module('nova', [
     .state('logout', {
       url: "/logout",
       controller: function($scope, Auth){
+        window.location.reload(true);
         Auth.signout();
       }
     })
@@ -83,15 +84,28 @@ angular.module('nova', [
       var userInbox = INBOX.child($rootScope.loggedInUser);
       var unread = $firebaseObject(userInbox);
       var unreadCount = userInbox.child('unread');
-
-      $firebaseObject(unreadCount).$bindTo($rootScope, 'unreadMessages').then(function() {
+      var currentUser = $rootScope.loggedInUser;
+      $rootScope.currentUser = {};
+      console.log(currentUser, $rootScope.currentUser);
+      /*$firebaseObject(unreadCount).$bindTo($rootScope, 'unreadMessages').then(function() {
         if ($rootScope.unreadMessages['$value'] === null) {
           $rootScope.unreadMessages = 0;
         }
         if ($rootScope.unreadMessages['$value'] === 0) {
           $rootScope.unreadMessages = 0;
         }
+      });*/
+      unreadCount.ref().on('value', function(snapshot) {
+        currentUser = $window.localStorage.getItem('loggedInUser');
+        $rootScope.currentUser = {};
+        if (snapshot.val() === null) {
+          $rootScope.currentUser.unread = 0;
+        } else {
+          $rootScope.currentUser.unread = snapshot.val();
+        }
+        console.log($rootScope.currentUser.unread);
       });
+
 
       userInbox.on('value', function(data) {
         $rootScope.contactHistory = [];

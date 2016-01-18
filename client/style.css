@@ -69,9 +69,17 @@ nav a.active-nav::after {
   left: -17px;
   height: 4.5rem;
   width: 4.5rem;
-  background-color: #e74c3c;
+  /*background-color: #e74c3c;*/
   border-radius: 100%;
   z-index: -1;
+}
+
+.has-unread::before {
+  background-color: green;
+}
+
+.no-unread::before {
+  background-color: #e74c3c;
 }
 
 nav a:hover, nav a:active, nav a:focus, nav a:visited {
