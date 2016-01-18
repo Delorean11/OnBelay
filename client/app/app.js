@@ -91,6 +91,7 @@ angular.module('nova', [
 
       var chatClosedAt = userInbox.child('chatClosedAt');
       var chatOpenedAt = userInbox.child('chatOpenedAt');
+      var messageSent = userInbox.child('messageSent');
 
       /*$firebaseObject(unreadCount).$bindTo($rootScope, 'unreadMessages').then(function() {
         if ($rootScope.unreadMessages['$value'] === null) {
@@ -113,6 +114,7 @@ angular.module('nova', [
 
       $firebaseObject(chatClosedAt).$bindTo($rootScope, 'chatClosedAt');
       $firebaseObject(chatOpenedAt).$bindTo($rootScope, 'chatOpenedAt');
+      $firebaseObject(messageSent).$bindTo($rootScope, 'messageSent');
 
       userInbox.on('value', function(data) {
         $rootScope.contactHistory = [];

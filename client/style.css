@@ -238,3 +238,11 @@ nav a:last-child {
   margin-top: -13px;
 }
 
+.newMessages {
+  color: crimson;
+}
+
+.regularMessages {
+  color: black;
+}
+
