@@ -18,9 +18,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hrr11-audi/chevynova/issues"
+    "url": "https://github.com/Delorean11/OnBelay/issues"
   },
-  "homepage": "https://github.com/hrr11-audi/chevynova#readme",
+  "homepage": "https://github.com/Delorean11/OnBelay",
   "dependencies": {
     "bower": "^1.7.2",
     "bcrypt-nodejs": "0.0.3",
