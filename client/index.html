@@ -25,13 +25,13 @@
     </div>
 <!-- ui-router nav -->
     <nav ng-controller="AuthController" ng-show="$root.hasAuth" role="navigation">
-      <a ng-if="unreadMessages['$value'] !== 0" ui-sref-active="active-nav" class="notification-icon"  data-toggle="offcanvas" data-target="#chatSideBar">{{ unreadMessages['$value'] || unreadMessages}}</a>
-      <a  ng-if="unreadMessages['$value'] === 0" ui-sref-active="active-nav" class="notification-icon"  data-toggle="offcanvas" data-target="#chatSideBar">0</a>
+     <!--  <a ui-sref-active="active-nav" class="notification-icon has-unread"  data-toggle="offcanvas" data-target="#chatSideBar">{{ unreadMessages['$value'] || unreadMessages}}</a>
+      <a ng-if="unreadMessages['$value'] === 0" ui-sref-active="active-nav" class="notification-icon no-unread"  data-toggle="offcanvas" data-target="#chatSideBar">0</a> -->
+      <a ui-sref-active="active-nav" ng-class="currentUser.unread ? 'has-unread' :'no-unread' " class="notification-icon"  data-toggle="offcanvas" data-target="#chatSideBar">{{currentUser.unread }}</a>
       <a ui-sref="main" ui-sref-active="active-nav">Climb</a>
 
       <a ui-sref="profile({username: loggedInUser})" ui-sref-active="active-nav">Profile</a>
       <a ui-sref="location" ui-sref-active="active-nav">Location Services</a>
-      <!-- <a data-toggle='offcanvas' data-target='#chatSideBar'>Chat</a> -->
       <a ui-sref="logout" ui-sref-active="active-nav">Log Out</a>
 
     </nav>
@@ -43,7 +43,6 @@
   <nav id="chatSideBar" class="navmenu navmenu-default navmenu-fixed-right offcanvas" role="navigation">
     <h3 class="navmenu-brand">Conversations</h3>
     <ul class="nav navmenu-nav">
-<!--       <li ng-repeat='contact in contactHistory track by $index'><a href="" ng-click="displayChat(contact.sender); markAsRead(contact.sender)" ng-class="{'unread': contact.newMessage}">{{ contact.sender }}</a></li> -->
       <li ng-repeat='contact in contactHistory track by $index'>
         <a href="" ng-if="contact.newMessage" ng-click="displayChat(contact.sender); markAsRead(contact.sender)" ng-class="{'unread': contact.newMessage}">{{ contact.sender }}</a>
         <a href="" ng-if="!contact.newMessage" ng-click="displayChat(contact.sender)" ng-class="{'unread': contact.newMessage}">{{ contact.sender }}</a>

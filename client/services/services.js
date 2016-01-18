@@ -37,6 +37,7 @@ angular.module('nova.services', [])
     $window.localStorage.removeItem('com.nova');
     $window.localStorage.removeItem('loggedInUser');
     $window.localStorage.removeItem('called');
+    $window.location.replace('http://localhost:3000/#');
     $state.go('signin');
   };
 
