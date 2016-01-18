@@ -43,7 +43,6 @@
             <p>
               <span ng-if="chat.users.sender === loggedInUser"><b>You: </b></span>
               <span ng-if="chat.users.sender !== loggedInUser"><b>{{chat.users.sender}}:</b></span>
-              <!-- <span ng-if="chat.date > chatClosedAt['$value'] && chat.date < chatOpenedAt['$value']" class="">-----New Messages------{{chatClosedAt['$value'] - chat.date}}</span> -->
               <span class="chat-text">{{chat.text}}</span>
             </p>
             <p class="chat-date">

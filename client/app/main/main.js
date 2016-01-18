@@ -7,7 +7,6 @@ angular.module('nova.main', [])
   $scope.message = {};
   $scope.showChat = false;
   $scope.dateNow = Date.now();
-  //$scope.normalMessages = false;
   $scope.chatsView = {};
 
   var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
@@ -22,9 +21,6 @@ angular.module('nova.main', [])
   };
 
   var updateChatOpenClose = function(openOrClose) {
-    /*var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
-    var senderInbox = inbox.child($rootScope.loggedInUser);*/
-    //var recipientInbox = inbox.child($scope.recipient);
     var obj = {};
     obj[openOrClose] = Date.now();
     senderInbox.update(obj);
@@ -56,7 +52,6 @@ angular.module('nova.main', [])
     $scope.showChat = true;
     $scope.recipient = user;
     $scope.conversations = FIREBASE;
-    // $scope.chatsView = {};
 
     $scope.conversations.on('child_added', function(snapshot) {
       $scope.chatsView[snapshot.key()] = snapshot.val();
@@ -126,8 +121,6 @@ angular.module('nova.main', [])
 
   $scope.sendMessage = function() {
     var conversations = new Firebase('https://on-belay-1.firebaseio.com/conversations/' + params);
-/*    var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
-    var senderInbox = inbox.child($rootScope.loggedInUser);*/
     var recipientInbox = inbox.child($scope.recipient);
 
     conversations.push({
@@ -154,7 +147,5 @@ angular.module('nova.main', [])
     senderInbox.update({
       messageSent: true
     });
-    console.log($scope.chatsView);
-    //$scope.normalMessages = true;
   };
 });
