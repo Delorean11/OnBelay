@@ -5,7 +5,7 @@ var User = require('../../models').User
 exports.returnUserLocations = function(req,res) {
   var userZipcode = req.body.userZipcode;
   var queryAmount = req.body.queryAmount || 5;
-  
+
   console.log(userZipcode);
   console.log(queryAmount);
 
@@ -30,21 +30,21 @@ exports.returnUserLocations = function(req,res) {
 
 
 // In the future may want to make a random feature in order to keep on getting users randomly until we fill the query amount.
-  
+
   // if (userArrayToReturn.length < queryAmount) {
   //   while(userArrayToReturn.length < queryAmount) {
-  //     // keep on finding one until 
-      
+  //     // keep on finding one until
+
   //   }
   // }
 
-  
+
 
   // go through all users filter out those whose zipcodes don't match
   // then we want to check lenght if length != query amount then get more users
-  // Once we have these users return them to client in an array. 
+  // Once we have these users return them to client in an array.
 
 
-  // return a list of users array with an object with a lat/lng and a 
+  // return a list of users array with an object with a lat/lng and a
 }
 

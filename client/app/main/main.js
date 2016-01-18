@@ -7,7 +7,6 @@ angular.module('nova.main', [])
   $scope.message = {};
   $scope.showChat = false;
   var params = '';
-  var called = $window.localStorage.getItem('called');
 
   $rootScope.displayChat = function(user) {
     params = [$rootScope.loggedInUser, user];
@@ -16,12 +15,20 @@ angular.module('nova.main', [])
     });
     params = params.join('-');
 
+    var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
+    var senderInbox = inbox.child($rootScope.loggedInUser);
+    var recipientInbox = inbox.child(user);
+
     var FIREBASE = new Firebase('https://on-belay-1.firebaseio.com/conversations/' + params);
     $firebaseObject(FIREBASE);
 
-    if(called === 'true' || called === null) {
-      $window.localStorage.setItem('called', false);
-    }
+    senderInbox.child(user).child('newMessage').once('value', function(snapshot) {
+      console.log(snapshot.val());
+      if (snapshot.val() === true) {
+        $rootScope.markAsRead(user);
+      }
+    });
+
 
     $scope.showChat = true;
     $scope.recipient = user;
@@ -96,18 +103,18 @@ angular.module('nova.main', [])
       text: $scope.message.text
     });
 
-    var calledCheck = $window.localStorage.getItem('called');
-    if(calledCheck === 'false') {
-      $window.localStorage.setItem('called', true);
-      recipientInbox.child($rootScope.loggedInUser).set({
-        sender: $rootScope.loggedInUser,
-        newMessage: true
-      });
+    recipientInbox.child($rootScope.loggedInUser).child('newMessage').once('value', function(snapshot) {
+      if (!snapshot.val()) {
+        recipientInbox.child($rootScope.loggedInUser).set({
+          sender: $rootScope.loggedInUser,
+          newMessage: true
+        });
 
-      recipientInbox.child('unread').transaction(function(currentVal) {
-        return(currentVal || 0) + 1;
-      });
-    }
+        recipientInbox.child('unread').transaction(function(currentVal) {
+          return(currentVal || 0) + 1;
+        });
+      }
+    });
 
     $scope.message.text = '';
   };
