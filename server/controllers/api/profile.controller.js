@@ -22,3 +22,21 @@ exports.updateProfile = function(req, res) {
     }
   });
 };
+
+exports.updateProfileImg = function(req, res){   
+  var authUser = req.decoded.user;    
+       
+  User.findOne({ username: authUser }, function(err, user){   
+    if(err) console.log(err);   
+    if(!user){    
+      res.json({ success: false, reason: 'User not found' });   
+    }else{    
+      user.profileImg = req.body.img;   
+   
+      user.save(function(err, user) {   
+        if (err) console.error(err);    
+        res.json({ success: true });    
+      });     
+    }   
+  });   
+};
