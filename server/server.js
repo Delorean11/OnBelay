@@ -8,7 +8,7 @@ var app = express();
 
 app.set('port', process.env.PORT || 3000);
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '10mb'}));
 app.use(express.static(__dirname + '/../client'));
 if (process.env.NODE_ENV !== 'production') {
   app.use(require('morgan')('dev'));
