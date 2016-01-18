@@ -4,5 +4,5 @@ angular.module('nova.location', [])
     // We are running hte process indicated in the Location Factory
     Location.getSortedListOfUsersByShortestDistance();
 
-    
+
 }])

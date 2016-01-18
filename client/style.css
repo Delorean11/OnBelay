@@ -173,7 +173,7 @@ nav a:last-child {
 .chat-box {
   position: fixed;
   bottom: -16px;
-  left: 80%;
+  right: 4px;
   height: 300px;
   width: 300px;
   z-index: 5000;
