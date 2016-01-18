@@ -15,15 +15,12 @@
             <div class="[ info-card-header ]">
             <h1><a ui-sref='profile({username: climber.username})'> {{climber.first}} {{climber.last}} </a></h1>
               <h3> {{climber.skillLevel}} / {{climber.gender}}</h3>
-              {{loggedInID + '-' + climber.id}}
             </div>
             <div class="[ info-card-detail ]">
               <!-- Description -->
               <p>Looking to climb with some fellow {{climber.skillLevel}} climbers! </p>
-              <button class="climbOnBtn btn btn-primary outline" ng-click="climbOn(climber.username)">Climb On</button>
               <div class="social">
-                <!-- Testing only, delete later -->
-                <button class="climbOnBtn btn btn-primary outline" ng-click="displayChat(climber.username)">Contact Me</button>
+                <button class="climbOnBtn btn btn-primary outline" ng-click="displayChat(climber.username)">Climb On</button>
                 <div ng-repeat="d in data">
                   {{d}}
                 </div>
