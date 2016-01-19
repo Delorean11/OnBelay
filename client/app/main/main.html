@@ -14,8 +14,9 @@
       <button class='button btn btn-primary' ng-click="sortByLocation(20)">20</button>
       <button class='button btn btn-primary' ng-click="sortByLocation(30)">30</button>
     </div>
+    <br>
     <div class="row">
-      <div class="[col-md-offset-1 col-md-4 ] climbers" ng-repeat="climber in activeClimbers" ng-if="climber.climb">
+      <div class="[col-md-offset-1 col-md-4 ] climbers" ng-repeat="climber in activeClimbers" ng-if="climber">
         <div class="[ info-card ]">
           <img style="width: 100%" ng-if="!climber.profileImg" ng-src="../assets/img/profile-generic.jpg"/>
           <img style="width: 100%" ng-if="climber.profileImg " ng-src="{{climber.profileImg}}"/>
@@ -25,14 +26,17 @@
 
             <h1><a ui-sref='profile({username: climber.username})'> {{climber.name.first}} {{climber.name.last}} </a></h1>
               <h3> {{climber.skillLevel}} / {{climber.gender}}</h3>
+              {{loggedInID + '-' + climber.id}}
             </div>
             
             <div class="[ info-card-detail ]">
 
               <!-- Description -->
               <p>Looking to climb with some fellow {{climber.skillLevel}} climbers! </p>
+              <button class="climbOnBtn btn btn-primary outline" ng-click="climbOn(climber.username)">Climb On</button>
               <div class="social">
-                <button class="climbOnBtn btn btn-primary outline" ng-click="displayChat(climber.username)">Climb On</button>
+                <!-- Testing only, delete later -->
+                <button class="climbOnBtn btn btn-primary outline" ng-click="displayChat(climber.username)">Contact Me</button>
                 <div ng-repeat="d in data">
                   {{d}}
                 </div>
@@ -47,20 +51,12 @@
         </div>
       </div>
     </div>
+
     <div class="panel panel-default chat-box" ng-show="showChat">
-      <div class="panel-heading"><b>{{recipient}}</b><span class="pull-right glyphicon glyphicon-remove close-btn" ng-click="closeChat()"></span></div>
-      <div class="panel-body chat-body" id="scrollToBottom" >
+      <div class="panel-heading"><b>{{recipient}}</b><span class="pull-right glyphicon glyphicon-remove close-btn" ng-click="showChat = !showChat"></span></div>
+      <div class="panel-body chat-body">
         <ul ng-repeat="chat in chatsView">
-          <li ng-class="{newMessages: chat.date > chatClosedAt['$value'] && chat.date < chatOpenedAt['$value'], regularMessages: messageSent['$value']}">
-            <p>
-              <span ng-if="chat.users.sender === loggedInUser"><b>You: </b></span>
-              <span ng-if="chat.users.sender !== loggedInUser"><b>{{chat.users.sender}}:</b></span>
-              <span class="chat-text">{{chat.text}}</span>
-            </p>
-            <p class="chat-date">
-              <span><i>{{chat.date | date:'shortTime'}}</i></span>
-            </p>
-          </li>
+          <li>{{chat.users.sender}}: {{chat.text}}</li>
         </ul>
       </div>
       <div class="panel-footer">
