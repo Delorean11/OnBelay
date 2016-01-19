@@ -1,6 +1,22 @@
 angular.module('nova.main', [])
 
-.controller('MainController', function($scope, $rootScope, $window, $state, $firebaseObject, $timeout, Climbers, Notify, Auth){
+.controller('MainController', function($scope, $rootScope, $window, $state, $firebaseObject, Climbers, Notify, Auth, Location){
+
+  $scope.sortByLocation = function(queryAmount) {
+    Location.getSortedListOfUsersByShortestDistance(queryAmount, function(sortedUsers){
+      
+      sortedUsers = sortedUsers.map(function(user){  
+        // user.profileImg = user.profileImg || 'default.png'
+        return user.user;
+      });
+
+      
+      $scope.activeClimbers = sortedUsers;
+      console.log($scope.activeClimbers[0].name.first)
+      
+    })
+   
+  }
 
   $scope.activeClimbers = [];
   $scope.status = false;

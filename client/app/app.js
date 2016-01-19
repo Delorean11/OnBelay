@@ -55,7 +55,9 @@ angular.module('nova', [
       templateUrl: "app/notifications/notifications.html",
       controller: "NotificationCtrl"
     });
-
+    // $httpProvider.defaults.useXDomain = true;
+    // delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    
     $httpProvider.interceptors.push('AttachTokens');
 })
 
