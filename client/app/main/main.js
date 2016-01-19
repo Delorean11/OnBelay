@@ -1,29 +1,10 @@
 angular.module('nova.main', [])
 
-
-.controller('MainController', function($scope, $rootScope, $window, $state, $firebaseObject, Climbers, Notify, Auth, Location){
-
-  $scope.sortByLocation = function(queryAmount) {
-    Location.getSortedListOfUsersByShortestDistance(queryAmount, function(sortedUsers){
-      
-      sortedUsers = sortedUsers.map(function(user){  
-        // user.profileImg = user.profileImg || 'default.png'
-        return user.user;
-      });
-
-      
-      $scope.activeClimbers = sortedUsers;
-      console.log($scope.activeClimbers[0].name.first)
-      
-    })
-   
-  }
+.controller('MainController', function($scope, $rootScope, $window, $state, $firebaseObject, $timeout, Climbers, Notify, Auth){
 
   $scope.activeClimbers = [];
   $scope.status = false;
   $scope.dateNow = Date.now();
-
-console.log($rootScope.loggedInUser);
 
   var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
   var senderInbox = inbox.child($rootScope.loggedInUser);
