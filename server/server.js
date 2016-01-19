@@ -17,10 +17,9 @@ if (process.env.NODE_ENV !== 'production') {
 /* seeds the db with fake users for development */
 if (process.env.NODE_ENV !== 'production') {
   mongoose.connect('mongodb://localhost/onbelay');
-  require('../fakeUsers')();
+  // require('../fakeUsers')();
 } else {
   mongoose.connect(process.env.MONGOLAB_URI);
-  require('../fakeUsers')();
 }
 
 controllers.climbOn(app);
