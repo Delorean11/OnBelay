@@ -20,7 +20,7 @@
               <!-- Description -->
               <p>Looking to climb with some fellow {{climber.skillLevel}} climbers! </p>
               <div class="social">
-                <button class="climbOnBtn btn btn-primary outline" ng-click="displayChat(climber.username)">Climb On</button>
+                <button class="climbOnBtn btn btn-primary outline" ng-click="$root.displayChat(climber.username)">Climb On</button>
                 <div ng-repeat="d in data">
                   {{d}}
                 </div>
@@ -35,9 +35,11 @@
         </div>
       </div>
     </div>
-    <div class="panel panel-default chat-box" ng-show="showChat">
-      <div class="panel-heading"><b>{{recipient}}</b><span class="pull-right glyphicon glyphicon-remove close-btn" ng-click="closeChat()"></span></div>
-      <div class="panel-body chat-body" id="scrollToBottom" >
+
+
+    <!-- <div class="panel panel-default chat-box" ng-show="showChat">
+      <div class="panel-heading"><b>{{recipient}}</b><span class="pull-right glyphicon glyphicon-remove close-btn" ng-click="showChat = !showChat"></span></div>
+      <div class="panel-body chat-body">
         <ul ng-repeat="chat in chatsView">
           <li ng-class="{newMessages: chat.date > chatClosedAt['$value'] && chat.date < chatOpenedAt['$value'], regularMessages: messageSent['$value']}">
             <p>
@@ -57,5 +59,5 @@
           <button class="btn btn-xs btn-primary" ng-click="sendMessage()">Send</button>
         </form>
       </div>
-    </div>
+    </div> -->
 </div>

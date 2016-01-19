@@ -4,13 +4,15 @@ angular.module('nova.main', [])
 
   $scope.activeClimbers = [];
   $scope.status = false;
-  $scope.message = {};
-  $scope.showChat = false;
   $scope.dateNow = Date.now();
-  $scope.chatsView = {};
 
   var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
   var senderInbox = inbox.child($rootScope.loggedInUser);
+  $rootScope.message = {};
+  if ($rootScope.showChat === undefined) {
+    $rootScope.showChat = false;
+  }
+
   var params = '';
 
   var scrollToBottom = function() {
@@ -49,12 +51,14 @@ angular.module('nova.main', [])
 
     updateChatOpenClose('chatOpenedAt');
 
-    $scope.showChat = true;
-    $scope.recipient = user;
+    $rootScope.showChat = true;
+    $rootScope.recipient = user;
     $scope.conversations = FIREBASE;
 
+    $rootScope.chatsView = {};
+
     $scope.conversations.on('child_added', function(snapshot) {
-      $scope.chatsView[snapshot.key()] = snapshot.val();
+      $rootScope.chatsView[snapshot.key()] = snapshot.val();
       scrollToBottom();
     });
 
@@ -62,7 +66,7 @@ angular.module('nova.main', [])
   };
 
   $rootScope.closeChat = function() {
-    $scope.showChat = !$scope.showChat
+    $rootScope.showChat = !$rootScope.showChat
     updateChatOpenClose('chatClosedAt');
     senderInbox.update({
       messageSent: false
@@ -119,14 +123,16 @@ angular.module('nova.main', [])
     sender.ref().child('newMessage').set(false);
   };
 
-  $scope.sendMessage = function() {
+  $rootScope.sendMessage = function() {
     var conversations = new Firebase('https://on-belay-1.firebaseio.com/conversations/' + params);
-    var recipientInbox = inbox.child($scope.recipient);
+    var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
+    var senderInbox = inbox.child($rootScope.loggedInUser);
+    var recipientInbox = inbox.child($rootScope.recipient);
 
     conversations.push({
       wasRead: false,
-      users: { sender: $rootScope.loggedInUser, recipient: $scope.recipient },
-      text: $scope.message.text,
+      users: { sender: $rootScope.loggedInUser, recipient: $rootScope.recipient },
+      text: $rootScope.message.text,
       date: Date.now()
     });
 
@@ -143,9 +149,10 @@ angular.module('nova.main', [])
       }
     });
 
-    $scope.message.text = '';
     senderInbox.update({
       messageSent: true
     });
+
+    $rootScope.message.text = '';
   };
 });
