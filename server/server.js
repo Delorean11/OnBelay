@@ -20,6 +20,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('../fakeUsers')();
 } else {
   mongoose.connect(process.env.MONGOLAB_URI);
+  require('../fakeUsers')();
 }
 
 controllers.climbOn(app);
