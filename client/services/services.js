@@ -60,6 +60,7 @@ angular.module('nova.services', [])
       method: 'GET',
       url: "/api/auth/user/climbers"
     }).then(function(res){
+      console.log(res.data)
       return res.data;
     });
   };
@@ -163,12 +164,27 @@ angular.module('nova.services', [])
     }
   }
 
-  var sendTestRequest = function(userZipcode,cb){
+  var getZipCode = function(lat,lng,cb) {
+    
+
+    $http({
+      method: 'GET',
+      url: 'http://ws.geonames.org/findNearbyPostalCodesJSON?formatted=true&lat='+ lat + '&lng=' + lng + '&username=onbelay',
+    }).success(function(data){
+      console.log(data, 'This is from geonames')
+      console.log(+data.postalCodes[0].postalCode);
+      var userZipcode = +data.postalCodes[0].postalCode;
+      cb(userZipcode)
+    })
+  }
+
+
+  var sendTestRequest = function(userZipcode, queryAmount, cb){
 
     $http({
       method: 'POST',
       url: '/api/location', //Server should have /api/location path defined
-      data: {userZipcode: userZipcode}
+      data: {userZipcode: userZipcode, queryAmount: queryAmount}
     }).success(function(data){
       console.log(data, 'this is from the location.js on client');
       cb(data)
@@ -189,7 +205,11 @@ angular.module('nova.services', [])
       var startPos;
       var geoSuccess = function(position) {
         startPos = position;
-        cb(startPos.coords.latitude,startPos.coords.longitude);
+        var lat = startPos.coords.latitude;
+        var lng = startPos.coords.longitude;
+        getZipCode(lat,lng,function(zipCode){
+          cb(lat,lng, zipCode);  
+        })
       };
       var geoError = function(error) {
         console.log('Error occurred. Error code: ' + error.code);
@@ -227,19 +247,19 @@ angular.module('nova.services', [])
 
   // Make ZipCode mandatory that way we can store their zip codes and filter by nearest zipCode
 
-  getSortedListOfUsersByShortestDistance = function(userZipcode) {
+  getSortedListOfUsersByShortestDistance = function(queryAmount,cb) {
     // We call this function to get the list of users sorted, we may want to pass in a userZipCode that we would get from the controller itself.
       // This is a chain of calls from the previous functions.
         // in our controller we want to run Location.getSortedListoFUsersByShortestDistance(optionalZipCode);
-    getUserLocation(function(lat,lng){
+    getUserLocation(function(lat,lng,userZipcode){
      currentUserPosition.lat = lat;
      currentUserPosition.lng = lng;
+     currentUserPosition.userZipcode = userZipcode;
 
       var listOfDistancesToUser = [];
-      // Need to get user's zipcode. Probably  within whatever controller we use.
-      var userZipcode = userZipcode || 63108;
+      // Need to get user's zipcode. Probably within whatever controller we use.
 
-        sendTestRequest(userZipcode, function(listOfUsers){
+        sendTestRequest(userZipcode, queryAmount, function(listOfUsers){
           //We are getting a list of user's from the server
           // We have a route whose only purpose is to get users filtered by location that we pass in.
             // Route exists in sendTestRequest api/location
@@ -256,7 +276,13 @@ angular.module('nova.services', [])
             var listOfDistancesToUserSorted = sortArrayObjects(listOfDistancesToUser);
             console.log(listOfDistancesToUserSorted, ' post sorting');
             // This array contains users that are sorted.
+
+            if (cb){ 
+              cb(listOfDistancesToUserSorted);
+            } else {
+
             return listOfDistancesToUserSorted;
+            }
         });
       });
   }
@@ -267,6 +293,7 @@ angular.module('nova.services', [])
     getUserLocation: getUserLocation,
     getDistance: getDistance,
     sortArrayObjects: sortArrayObjects,
+    getZipCode: getZipCode,
     getSortedListOfUsersByShortestDistance: getSortedListOfUsersByShortestDistance
   };
 
