@@ -1,5 +1,6 @@
 angular.module('nova.main', [])
 
+
 .controller('MainController', function($scope, $rootScope, $window, $state, $firebaseObject, Climbers, Notify, Auth, Location){
 
   $scope.sortByLocation = function(queryAmount) {
@@ -21,6 +22,8 @@ angular.module('nova.main', [])
   $scope.activeClimbers = [];
   $scope.status = false;
   $scope.dateNow = Date.now();
+
+console.log($rootScope.loggedInUser);
 
   var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
   var senderInbox = inbox.child($rootScope.loggedInUser);

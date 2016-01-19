@@ -41,7 +41,6 @@ angular.module('nova', [
     .state('logout', {
       url: "/logout",
       controller: function($scope, Auth){
-        window.location.reload(true);
         Auth.signout();
       }
     })
@@ -57,7 +56,6 @@ angular.module('nova', [
     });
     // $httpProvider.defaults.useXDomain = true;
     // delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    
     $httpProvider.interceptors.push('AttachTokens');
 })
 
@@ -87,36 +85,14 @@ angular.module('nova', [
       var unread = $firebaseObject(userInbox);
       var unreadCount = userInbox.child('unread');
 
-      var currentUser = $rootScope.loggedInUser;
-      $rootScope.currentUser = {};
-      console.log(currentUser, $rootScope.currentUser);
-
-      var chatClosedAt = userInbox.child('chatClosedAt');
-      var chatOpenedAt = userInbox.child('chatOpenedAt');
-      var messageSent = userInbox.child('messageSent');
-
-      /*$firebaseObject(unreadCount).$bindTo($rootScope, 'unreadMessages').then(function() {
+      $firebaseObject(unreadCount).$bindTo($rootScope, 'unreadMessages').then(function() {
         if ($rootScope.unreadMessages['$value'] === null) {
           $rootScope.unreadMessages = 0;
         }
         if ($rootScope.unreadMessages['$value'] === 0) {
           $rootScope.unreadMessages = 0;
         }
-      });*/
-      unreadCount.ref().on('value', function(snapshot) {
-        currentUser = $window.localStorage.getItem('loggedInUser');
-        $rootScope.currentUser = {};
-        if (snapshot.val() === null) {
-          $rootScope.currentUser.unread = 0;
-        } else {
-          $rootScope.currentUser.unread = snapshot.val();
-        }
-        console.log($rootScope.currentUser.unread);
       });
-
-      $firebaseObject(chatClosedAt).$bindTo($rootScope, 'chatClosedAt');
-      $firebaseObject(chatOpenedAt).$bindTo($rootScope, 'chatOpenedAt');
-      $firebaseObject(messageSent).$bindTo($rootScope, 'messageSent');
 
       userInbox.on('value', function(data) {
         $rootScope.contactHistory = [];
