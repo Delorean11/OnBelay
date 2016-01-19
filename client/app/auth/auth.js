@@ -59,7 +59,10 @@ angular.module('nova.auth', [])
   };
 
   $scope.signup = function () {
-
+    $scope.checkGeoLocation(function(lat,lng){
+      $scope.user.lat = lat;
+      $scope.user.lng = lng;
+    })
     Auth.signup($scope.user)
       .then(function (token) {
         $window.localStorage.setItem('com.nova', token);
