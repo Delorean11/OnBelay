@@ -4,7 +4,7 @@ npm-debug.log
 
 node_modules
 bower_components
-
+fakeUsers.js
 server/config/secrets.js
 data/
 lib/
