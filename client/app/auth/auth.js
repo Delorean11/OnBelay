@@ -6,6 +6,7 @@ angular.module('nova.auth', [])
     $rootScope.hasAuth = true;
   }
 
+
   $scope.checkGeoLocation = function(cb) {
     if (navigator.geolocation) {
       console.log('Geolocation is supported!');

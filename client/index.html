@@ -50,6 +50,31 @@
       </li>
     </ul>
   </nav>
+
+  <div class="panel panel-default chat-box" ng-show="showChat">
+      <div class="panel-heading"><b>{{recipient}}</b><span class="pull-right glyphicon glyphicon-remove close-btn" ng-click="closeChat()"></span></div>
+      <div class="panel-body chat-body" id="scrollToBottom">
+        <ul ng-repeat="chat in chatsView">
+          <li ng-class="{newMessages: chat.date > chatClosedAt['$value'] && chat.date < chatOpenedAt['$value'], regularMessages: messageSent['$value']}">
+            <p>
+              <span ng-if="chat.users.sender === loggedInUser"><b>You: </b></span>
+              <span ng-if="chat.users.sender !== loggedInUser"><b>{{chat.users.sender}}:</b></span>
+              <span class="chat-text">{{chat.text}}</span>
+            </p>
+            <p class="chat-date">
+              <span><i>{{chat.date | date:'shortTime'}}</i></span>
+            </p>
+          </li>
+        </ul>
+      </div>
+      <div class="panel-footer">
+        <form class="form-inline chat-form">
+          <input type="text" class="chat-input form-control" ng-model="message.text">
+          <button class="btn btn-xs btn-primary" ng-click="sendMessage()">Send</button>
+        </form>
+      </div>
+    </div>
+
   <!-- Google Maps API you can load multiple libraries using a comma-->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvsxbn60GcAD8a6cpo9ESwQ1BG8Cb5Tgg&libraries=geometry,places"></script>
 

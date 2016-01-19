@@ -120,7 +120,10 @@ angular.module('nova', [
         $rootScope.contactHistory = [];
         for(var key in data.val()) {
           var contact = data.val()[key];
-          $rootScope.contactHistory.push(contact);
+          console.log(key);
+          if (key !== 'messageSent' && key !== 'chatOpenedAt' && key !== 'chatClosedAt' && key !== $rootScope.loggedInUser && key !== 'unread') {
+            $rootScope.contactHistory.push(contact);
+          }
         }
       });
     }
