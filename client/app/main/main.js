@@ -1,12 +1,30 @@
 angular.module('nova.main', [])
 
-.controller('MainController', function($scope, $rootScope, $window, $state, $firebaseObject, Climbers, Notify, Auth){
+.controller('MainController', function($scope, $rootScope, $window, $state, $firebaseObject, $timeout, Climbers, Notify, Auth){
 
   $scope.activeClimbers = [];
   $scope.status = false;
   $scope.message = {};
   $scope.showChat = false;
+  $scope.dateNow = Date.now();
+  $scope.chatsView = {};
+
+  var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
+  var senderInbox = inbox.child($rootScope.loggedInUser);
   var params = '';
+
+  var scrollToBottom = function() {
+      $timeout(function() {
+      var scroller = document.getElementById("scrollToBottom");
+      scroller.scrollTop = scroller.scrollHeight;
+    }, 20, false);
+  };
+
+  var updateChatOpenClose = function(openOrClose) {
+    var obj = {};
+    obj[openOrClose] = Date.now();
+    senderInbox.update(obj);
+  }
 
   $rootScope.displayChat = function(user) {
     params = [$rootScope.loggedInUser, user];
@@ -29,17 +47,27 @@ angular.module('nova.main', [])
       }
     });
 
+    updateChatOpenClose('chatOpenedAt');
 
     $scope.showChat = true;
     $scope.recipient = user;
     $scope.conversations = FIREBASE;
-    $scope.chatsView = {};
 
     $scope.conversations.on('child_added', function(snapshot) {
       $scope.chatsView[snapshot.key()] = snapshot.val();
+      scrollToBottom();
     });
 
+    scrollToBottom();
   };
+
+  $rootScope.closeChat = function() {
+    $scope.showChat = !$scope.showChat
+    updateChatOpenClose('chatClosedAt');
+    senderInbox.update({
+      messageSent: false
+    });
+  }
 
   $scope.goToProfile = function(climber){
     ClimberProfile.climber.info = climber;
@@ -93,14 +121,13 @@ angular.module('nova.main', [])
 
   $scope.sendMessage = function() {
     var conversations = new Firebase('https://on-belay-1.firebaseio.com/conversations/' + params);
-    var inbox = new Firebase('https://on-belay-1.firebaseio.com/inbox/');
-    var senderInbox = inbox.child($rootScope.loggedInUser);
     var recipientInbox = inbox.child($scope.recipient);
 
     conversations.push({
       wasRead: false,
       users: { sender: $rootScope.loggedInUser, recipient: $scope.recipient },
-      text: $scope.message.text
+      text: $scope.message.text,
+      date: Date.now()
     });
 
     recipientInbox.child($rootScope.loggedInUser).child('newMessage').once('value', function(snapshot) {
@@ -117,5 +144,8 @@ angular.module('nova.main', [])
     });
 
     $scope.message.text = '';
+    senderInbox.update({
+      messageSent: true
+    });
   };
 });

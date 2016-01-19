@@ -28,6 +28,7 @@
      <!--  <a ui-sref-active="active-nav" class="notification-icon has-unread"  data-toggle="offcanvas" data-target="#chatSideBar">{{ unreadMessages['$value'] || unreadMessages}}</a>
       <a ng-if="unreadMessages['$value'] === 0" ui-sref-active="active-nav" class="notification-icon no-unread"  data-toggle="offcanvas" data-target="#chatSideBar">0</a> -->
       <a ui-sref-active="active-nav" ng-class="currentUser.unread ? 'has-unread' :'no-unread' " class="notification-icon"  data-toggle="offcanvas" data-target="#chatSideBar">{{currentUser.unread }}</a>
+
       <a ui-sref="main" ui-sref-active="active-nav">Climb</a>
 
       <a ui-sref="profile({username: loggedInUser})" ui-sref-active="active-nav">Profile</a>

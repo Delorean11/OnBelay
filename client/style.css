@@ -55,6 +55,7 @@ nav a.active-nav::after {
   position: relative;
   z-index: 1;
   margin-right: 4rem;
+  cursor: pointer;
 }
 
 .notification-icon.active-nav::after {
@@ -75,7 +76,7 @@ nav a.active-nav::after {
 }
 
 .has-unread::before {
-  background-color: green;
+  background-color: #1ac01a;
 }
 
 .no-unread::before {
@@ -186,6 +187,7 @@ nav a:last-child {
   width: 300px;
   z-index: 5000;
   background: #e3e3e3;
+  border: 2px solid #3498db;
 }
 
 .panel-default > .panel-heading {
@@ -208,6 +210,14 @@ nav a:last-child {
   overflow-y: scroll;
 }
 
+.chat-body ul {
+  padding: 0
+}
+
+.chat-body ul li {
+  margin-bottom: 25px;
+}
+
 .chat-form {
   margin-top: 21px;
 }
@@ -219,3 +229,22 @@ nav a:last-child {
 .close-btn {
   cursor: pointer;
 }
+
+.chat-text {
+  word-wrap: break-word;
+}
+
+.chat-date {
+  float:right;
+  font-size: x-small;
+  margin-top: -13px;
+}
+
+.newMessages {
+  color: crimson;
+}
+
+.regularMessages {
+  color: black;
+}
+
